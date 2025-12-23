@@ -49,8 +49,10 @@ resource "aws_instance" "terra_instance" {
   ami                         = var.ec2_ami_id
   instance_type               = var.ec2_instance_type
   key_name                    = aws_key_pair.terra_key.key_name
-  vpc_security_group_ids      = [aws_security_group.terra_sg.name]
+  vpc_security_group_ids      = [aws_security_group.terra_sg.id]
   associate_public_ip_address = true
+  user_data                   = file("automate.sh")
+
   root_block_device {
     volume_size = var.ec2_root_storage_size
     volume_type = "gp3"
@@ -59,5 +61,4 @@ resource "aws_instance" "terra_instance" {
   tags = {
     Name = "terra_instance"
   }
-
 }
