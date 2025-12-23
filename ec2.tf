@@ -1,7 +1,7 @@
 # aws key pair
 resource "aws_key_pair" "terra_key" {
   key_name   = "deployer_key"
-  public_key = file("terr-key.pub")
+  public_key = file("terra-key.pub")
 }
 
 # aws default vpc
@@ -46,13 +46,13 @@ resource "aws_security_group" "terra_sg" {
 
 # ec2 instance
 resource "aws_instance" "terra_instance" {
-  ami                         = "ami-0f5fcdfbd140e4ab7" # ubuntu AMI
-  instance_type               = "t2.micro"
+  ami                         = var.ec2_ami_id
+  instance_type               = var.ec2_instance_type
   key_name                    = aws_key_pair.terra_key.key_name
   vpc_security_group_ids      = [aws_security_group.terra_sg.name]
   associate_public_ip_address = true
   root_block_device {
-    volume_size = 10
+    volume_size = var.ec2_root_storage_size
     volume_type = "gp3"
   }
 
