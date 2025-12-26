@@ -46,9 +46,12 @@ resource "aws_security_group" "terra_sg" {
 
 # ec2 instance
 resource "aws_instance" "terra_instance" {
-  count = 2 # meta argument to create multiple instances
+  for_each = tomap({
+    "mainul-t2-medium" = "t2.medium"
+    "mainul-t2-micro"  = "t2.micro"
+  })
   ami                         = var.ec2_ami_id
-  instance_type               = var.ec2_instance_type
+  instance_type               = each.value
   key_name                    = aws_key_pair.terra_key.key_name
   vpc_security_group_ids      = [aws_security_group.terra_sg.id]
   associate_public_ip_address = true
@@ -60,6 +63,6 @@ resource "aws_instance" "terra_instance" {
   }
 
   tags = {
-    Name = "terra_instance"
+    Name = each.key
   }
 }
