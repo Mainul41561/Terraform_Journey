@@ -50,6 +50,7 @@ resource "aws_instance" "terra_instance" {
     "mainul-t2-medium" = "t2.medium"
     "mainul-t2-micro"  = "t2.micro"
   })
+  depends_on                  = [aws_security_group.terra_sg, aws_key_pair.terra_key]
   ami                         = var.ec2_ami_id
   instance_type               = each.value
   key_name                    = aws_key_pair.terra_key.key_name
@@ -58,7 +59,7 @@ resource "aws_instance" "terra_instance" {
   #user_data                   = file("automate.sh")
 
   root_block_device {
-    volume_size = var.ec2_root_storage_size
+    volume_size = var.env == "dev" ? 20 : var.ec2_default_root_storage_size 
     volume_type = "gp3"
   }
 
