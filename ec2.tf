@@ -59,7 +59,7 @@ resource "aws_instance" "terra_instance" {
   #user_data                   = file("automate.sh")
 
   root_block_device {
-    volume_size = var.env == "dev" ? 20 : var.ec2_default_root_storage_size 
+    volume_size = var.env == "dev" ? 20 : var.ec2_default_root_storage_size
     volume_type = "gp3"
   }
 
